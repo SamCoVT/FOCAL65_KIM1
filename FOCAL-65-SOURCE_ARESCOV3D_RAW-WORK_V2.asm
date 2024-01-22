@@ -7,7 +7,7 @@
 ; and v4 (Apple II-specific) painstakingly typed in by Dave Hassler and
 ; Nils Andreas, 2023. (WAYNE'S COMMENTS, my/Nils's comments - dhh)
 ; v3d TIM source provided by Paul Bikle, v4 by Wayne Wall, both in 2023.
-; Proofreading and corrections by SamCoVT, MIKE B, AZIN67, GAVIN D
+; Proofreading and corrections by SamCoVT, MIKE B., GAVIN D., AZin67
 ;
 
 ; Zero page block - *must* be loaded before main program executes
@@ -2475,10 +2475,10 @@ FINR      JSR INTGER	; FORM ROUNDED INTEGER
 ;
 ;              ROUTINES TO CHECK RANGE INPUT AND OUTPUT DEVICE NUMBERS
 ;
-CHKODV    CMP #$03	;COMPARE AC AGAINST MAX ALLOWED
+CHKODV    CMP #ODEVM	;COMPARE AC AGAINST MAX ALLOWED
           BPL RNGDEV	;BRANCH IF ERROR
 CHKRTS    RTS		;RETURN IF OK
-CHKIDV    CMP #$03	;COMPARE AGAINST MAX
+CHKIDV    CMP #IDEVM	;COMPARE AGAINST MAX
           BMI CHKRTS	;RETURN IF OK
 RNGDEV    CMP #$FF	;MINUS 1?
           BEQ CHKRTS	;BRANCH IF YES, ALWAYS IN RANGE
@@ -3025,10 +3025,13 @@ FSBR1     PLA		;GET FLAGS FROM 'GETLN' INTO ACCUMULATOR
           JSR POPIV	;GET VALUE OF '&0' AND POINTER TO IT
           JSR PUSHIV	;SAVE FOR LATER (VALUE IS IN FAC2)
           JSR PUTVAR	;NOW SET '&0' TO ARG VALUE (IN FAC1)
-          LDA INSW	;SAVE WHERE INPUT IS COMING FROM
-          JSR PUSHA	;(PROGRAM OR INPUT DEVICE)
-          LDA #$00	;AND FORCE IT TO BE PROGRAM
-          STA INSW          
+
+; SamCoVT - These next 4 instructions do not appear to be in the original .PTP version          
+;          LDA INSW	;SAVE WHERE INPUT IS COMING FROM
+;          JSR PUSHA	;(PROGRAM OR INPUT DEVICE)
+;          LDA #$00	;AND FORCE IT TO BE PROGRAM
+;          STA INSW          
+
           PLA		;GET STATUS FLAGS RETURNED BY 'GETLN'
           TAX		;SAVE IN X REGISTER
           JSR PUSHJ	;NOW PERFORM THE 'DO' OF THE LINE OR GROUP
@@ -3521,9 +3524,14 @@ KEYIN     INC $76	; label HASH
 ;  Perhaps leftover from Aresco conversion of Prog/Exch
 ;  version for KIM-1 (???).
 ;
-		.BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
-		.BYTE $53,$01,$51,$51,$11,$53,$EE,$CE,$FE,$EE,$EA
-		.BYTE $EE,$06,$FE
+;        .BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
+
+; Papertape version has these 12 bytes first instead - SamCoVT
+        .BYTE $17,$09,$01,$8D,$42,$17,$A9,$00,$20,$A0,$1E
+
+; Both versions agree on these bytes
+        .BYTE $53,$01,$51,$51,$11,$53,$EE,$CE,$FE,$EE,$EA
+        .BYTE $EE,$06,$FE
 ;          BRK
 ;          ???                ;01000011 'C'
 ;          ORA ($51),Y
@@ -3803,6 +3811,9 @@ BITTAB    .BYTE $00
 ; handwritten note in P/E source: "READ/WRITE"
 ; Two definitions made here:
 ;     .DEF IDEWVM=3     .DEF ODEVM=3  ; MAX # OF I/O DEVICES
+IDEVM = 3                  ; Original was IDEWVM - changed to IDEVM (Input DEVice Max)
+ODEVM = 3
+    
 ;
 IDSPH     .BYTE >KEYIN     ; DEVICE 0 - KEYBOARD INPUT ROUTINE
           .BYTE 0          ; DEVICE 1 - CASSETTE #0 INPUT ROUTINE
