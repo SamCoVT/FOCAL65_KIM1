@@ -16,8 +16,7 @@ special FOCAL setting turned on (details on both the FOCAL-65 and
 KIM-1 simulator pages).
 
 This is a separate effort from Hans Otten's work to recreate this code
-from the scanned listing combined with some patches (to the I/O
-routines, in particular).  This code has been formatted for the
+from the scanned listing.  This code has been formatted for the
 Kowalski assembler, but should assemble with other assemblers with
 only minor formatting or assembler directive changes.
 
@@ -81,12 +80,15 @@ http://www.dettus.net/dhex/
 
 ## Filenames used:
 FOCAL-650000.bin - binary dump of zero page from PTP (papertape) file
+
 FOCAL-652000.bin - binary dump of program (starting at $2000) from PTP file
+
 FOCALNEW.bin - binary image (entire 64K memory space) from Kowalski assembler after assembling FOCAL-65-SOURCE_ARESCOV3D_RAW-WORK_V2.asm 
 
 Cleaner original binary from Hans Otten:
 
 FOCALZP.BIN - binary dump of zero page
+
 FOCALM.BIN - binary dump of program (starting at $2000)
 
 ## Zero page compare
