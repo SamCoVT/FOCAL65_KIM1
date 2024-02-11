@@ -6,47 +6,36 @@
 ; New listing and comments from Wayne Wall's FOCAL-65 v3 (6502-TIM monitor ROM)
 ; and v4 (Apple II-specific) painstakingly typed in by Dave Hassler and
 ; Nils Andreas, 2023. (WAYNE'S COMMENTS, my/Nils's comments - dhh)
-; v3d TIM source provided by Paul Bikle, v4 by Wayne Wall, both in 2023.
+; v3d TIM source provided by Paul Birkle, v4 by Wayne Wall, both in 2023.
 ; Proofreading and corrections by SamCoVT, MIKE B., GAVIN D., AZin67
 ;
 
 ; Zero page block - *must* be loaded before main program executes
 
-;0000  53 53 4C E0 2C 4C DF 2C-00 00 00 00 00 00 00 00
-;0010  00 62 7B 66 EB 6B 3A 7B-6A 6B 6B 7B FB 7B 6B 6B
-;0020  00 00 00 00 00 00 FF 00-00 01 00 00 00 00 00 E0
-;0030  36 FE 36 00 00 00 00 00-00 00 00 00 00 00 FF 36
-;0040  FF 36 FF 36 00 00 00 00-00 00 00 00 00 00 00 00
-;0050  00 00 00 00 5F 00 00 00-00 00 00 00 00 00 4C 00
-;0060  00 6C 00 00 48 00 00 00-00 00 00 00 00 00 00 C0
-;0070  10 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00
-;0080  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 05
-;0090  05 83 50 00 00 00 7F 40-00 00 00 80 40 00 00 00
-;00A0  00 00 00 00 00 FF 1C 3C-7C 5F 7F 7C 3E 7F 3E FF
-;00B0  94 DD 84 D4 85 D4 95 04-DD 94 95 DF 8C 15 1D 94
-;00C0  00 D3 E0 C1 80 90 D3 C0-C2 A3 00 C0 81 82 C3 80
-;00D0  62 6A FB 6B 6A 6A 02 FF-5A 4B E3 10 EB 62 62 4B
-;00E0  7F 6C 7F 7D 3F 7F 2E 7F-7F 7E 7F 36 5F 7E 3E 7F
-;00F0  94 00 FF FF 84 A7 19 83-00 00 DF 10 A9 FF C7 01
+; SamCoVT - notes from focal 6502 user notes (describing a zero page
+; initialization routine) indicate that only $00-$BF needs to be loaded.
+; This zero page data has been patched to make FOCAL65 take 8K (assumes
+; a 16K KIM-1).  This leaves room on the end for other patches, including
+; the aforementioned zero page initialization routine.
 
-        .ORG $0000
-
-        .BYTE $53, $53, $4C, $E0, $2C, $4C, $DF, $2C, $00, $00, $00, $00, $00, $00, $00, $00        
-        .BYTE $00, $62, $7B, $66, $EB, $6B, $3A, $7B, $6A, $6B, $6B, $7B, $FB, $7B, $6B, $6B
-        .BYTE $00, $00, $00, $00, $00, $00, $FF, $00, $00, $01, $00, $00, $00, $00, $00, $E0
-        .BYTE $36, $FE, $36, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $36
-        .BYTE $FF, $36, $FF, $36, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-        .BYTE $00, $00, $00, $00, $5F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $4C, $00
-        .BYTE $00, $6C, $00, $00, $48, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $C0
-        .BYTE $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-        .BYTE $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $05
-        .BYTE $05, $83, $50, $00, $00, $00, $7F, $40, $00, $00, $00, $80, $40, $00, $00, $00
-        .BYTE $00, $00, $00, $00, $00, $FF, $1C, $3C, $7C, $5F, $7F, $7C, $3E, $7F, $3E, $FF
-        .BYTE $94, $DD, $84, $D4, $85, $D4, $95, $04, $DD, $94, $95, $DF, $8C, $15, $1D, $94
-        .BYTE $00, $D3, $E0, $C1, $80, $90, $D3, $C0, $C2, $A3, $00, $C0, $81, $82, $C3, $80
-        .BYTE $62, $6A, $FB, $6B, $6A, $6A, $02, $FF, $5A, $4B, $E3, $10, $EB, $62, $62, $4B
-        .BYTE $7F, $6C, $7F, $7D, $3F, $7F, $2E, $7F, $7F, $7E, $7F, $36, $5F, $7E, $3E, $7F
-        .BYTE $94, $00, $FF, $FF, $84, $A7, $19, $83, $00, $00, $DF, $10, $A9, $FF, $C7, $01
+;        .ORG $0000
+;
+;        .BYTE $53, $53, $4C, $E0, $2C, $4C, $DF, $2C, $00, $00, $00, $00, $00, $00, $00, $00        
+;        .BYTE $00, $62, $7B, $66, $EB, $6B, $3A, $7B, $6A, $6B, $6B, $7B, $FB, $7B, $6B, $6B
+;        .BYTE $00, $00, $00, $00, $00, $00, $FF, $00, $00, $01, $00, $00, $00, $00, $00, $E0
+;        .BYTE $3F, $FE, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $3F
+;        .BYTE $FF, $3F, $FF, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+;        .BYTE $00, $00, $00, $00, $5F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $4C, $00
+;        .BYTE $00, $6C, $00, $00, $48, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $C0
+;        .BYTE $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+;        .BYTE $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $05
+;        .BYTE $05, $83, $50, $00, $00, $00, $7F, $40, $00, $00, $00, $80, $40, $00, $00, $00
+;        .BYTE $00, $00, $00, $00, $00, $FF, $1C, $3C, $7C, $5F, $7F, $7C, $3E, $7F, $3E, $FF
+;        .BYTE $94, $DD, $84, $D4, $85, $D4, $95, $04, $DD, $94, $95, $DF, $8C, $15, $1D, $94
+;        .BYTE $00, $D3, $E0, $C1, $80, $90, $D3, $C0, $C2, $A3, $00, $C0, $81, $82, $C3, $80
+;        .BYTE $62, $6A, $FB, $6B, $6A, $6A, $02, $FF, $5A, $4B, $E3, $10, $EB, $62, $62, $4B
+;        .BYTE $7F, $6C, $7F, $7D, $3F, $7F, $2E, $7F, $7F, $7E, $7F, $36, $5F, $7E, $3E, $7F
+;        .BYTE $94, $00, $FF, $FF, $84, $A7, $19, $83, $00, $00, $DF, $10, $A9, $FF, $C7, $01
 
 ; ZERO PAGE USE:
 
@@ -1834,7 +1823,8 @@ EFUNC     LDA ETEMP1	; GET THE HASH CODE FOR FUNCTION NAME
           JSR POPA	; GET THE NAME BACK AGAIN
           TAX		; TRANSFER TO X REGISTER
           JSR PUSHJ     ; AND GO DO THE FUNCTION
-          .WORD	EVALM1
+          .WORD	FUNC    ; SamCoVT - scan has EVALM1 but binary version
+                        ; has FUNC here instead
           JMP ERPAR     ; GO SEE IF TERMINATOR IS A RIGHT PAREN.
 ; 
 ; HERE FOR A QUOTED CONSTANT
@@ -2828,7 +2818,8 @@ RUBSTI    LDX IDEV	;IS THE INPUT DEVICE
           JSR EATTVC	;YES, THEN EAT THE CHAR OFF CRT SCREEN
           BPL RUBSC	;AND DO COMMON THINGS
 RUBS1     LDA #RUBECH	;ECHO PLAIN CHAR TO INDICATE A RUBOUT
-          JSR PRINTC
+          JSR PRNTC     ; SamCoVT - scan says PRINTC but binary version 
+                        ; uses PRNTC, which just skips NULL check
 RUBSC     DEC VSUB+1	;PACK UP ONE BYTE IN THE STRING
           DEC STRCNT	;DON'T COUNT THE CHARACTER RUBBED OUT
           INC STRMAX
@@ -3504,7 +3495,7 @@ CONINI    LDA #$E0	; init BRK vector as $2CE0
 TVOUT     JSR $1EA0	; TTY OUTCH in KIM-1 ROM
           CLC
           RTS
-KEYIN     INC $76	; label HASH
+KEYIN     INC HASH      ; bump random seed
           BIT $1740     ; (R)RIOT I/O register A
           BMI KEYIN
           LDA $1742     ; (R)RIOT I/O register B
@@ -3524,12 +3515,7 @@ KEYIN     INC $76	; label HASH
 ;  Perhaps leftover from Aresco conversion of Prog/Exch
 ;  version for KIM-1 (???).
 ;
-;        .BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
-
-; Papertape version has these 12 bytes first instead - SamCoVT
-        .BYTE $17,$09,$01,$8D,$42,$17,$A9,$00,$20,$A0,$1E
-
-; Both versions agree on these bytes
+        .BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
         .BYTE $53,$01,$51,$51,$11,$53,$EE,$CE,$FE,$EE,$EA
         .BYTE $EE,$06,$FE
 ;          BRK
@@ -3887,9 +3873,48 @@ CLOAL     .BYTE <RTS1
           .BYTE <RTS1
           .BYTE 0
           .BYTE 0
+
+; SamCoVT - Zero page initialization routine from focal 6502 user notes
+; patched in here.
+ZPAGE = 0
+LENGTH = $BF            ; NUMBER OF BYTES
+STARTF = $2000
+        .ORG $3F00
+; CSTART (address $3F00) will now be the new cold start address.
+CSTART
+        LDX #0          ; INIT THE LOOP COUNTER
+ZLOOP
+        LDA ZSTORE,X    ; START MOVING DATA
+        STA ZPAGE,X
+        INX
+        CPX #LENGTH+1
+        BNE ZLOOP
+        JMP STARTF      ; PAGE IS SET UP
+                        ; GO TO FOCAL
+
+        .ORG $3F10
+ZSTORE
+        .BYTE $53, $53, $4C, $E0, $2C, $4C, $DF, $2C, $00, $00, $00, $00, $00, $00, $00, $00        
+        .BYTE $00, $62, $7B, $66, $EB, $6B, $3A, $7B, $6A, $6B, $6B, $7B, $FB, $7B, $6B, $6B
+        .BYTE $00, $00, $00, $00, $00, $00, $FF, $00, $00, $01, $00, $00, $00, $00, $00, $E0
+        .BYTE $3F, $FE, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $FF, $3F
+        .BYTE $FF, $3F, $FF, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        .BYTE $00, $00, $00, $00, $5F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $4C, $00
+        .BYTE $00, $6C, $00, $00, $48, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $C0
+        .BYTE $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+        .BYTE $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $05
+        .BYTE $05, $83, $50, $00, $00, $00, $7F, $40, $00, $00, $00, $80, $40, $00, $00, $00
+        .BYTE $00, $00, $00, $00, $00, $FF, $1C, $3C, $7C, $5F, $7F, $7C, $3E, $7F, $3E, $FF
+        .BYTE $94, $DD, $84, $D4, $85, $D4, $95, $04, $DD, $94, $95, $DF, $8C, $15, $1D, $94
+
 ;
 ;      FOCEND - TEXT AREAS AND THE LIKE
 ;
+; SamCoVT - Zero page variables have been modified to make room
+; for zero page loading routine (extending FOCAL to take up a full
+; 8KB).  As a result, line 0.0 (below) needs to be moved up to
+; $3FE0.
+          .ORG $3FE0
 PRGBEG    .BYTE 0	; LINE NUMBER OF 00.00
           .BYTE 0     
           .ASCII  " C FOCAL-65 (V3D) 26-AUG-77"
