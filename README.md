@@ -57,6 +57,9 @@ file (Intel hex does not.  Binary dumps the entire 64K memory space
 and will overwrite hardware configuration registers for the KIM-1, 
 causing failure as well).
 
+To get a PTP file, use the Motorola S-records format when saving from the
+Kowalski assembler and then use Hans Otten's Convert8bitFormat program
+to convert from S-records to MOS PTP format.
 
 # Binary comparison notes:
 ## Programs used:
