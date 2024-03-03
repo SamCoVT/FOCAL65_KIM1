@@ -3471,66 +3471,27 @@ FINP6     LDA SIGNP	;NOW ADD SIGN
           JSR FCOMPL	;WAS NEG
 FINP8     JMP NORM	;PJUMP TO NORMALIZE
 ;
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;
-;     Here begins (again) code restoration by dhh
-;
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;
-; from here, the Aresco version of V3D code (TTY) completely differs from
-; the ProgramExchange/6502 Group TIM-monitor code upon which it is based.
-; PE code occupies $24A6 to $24D0 (here $349E to $34E7), and seems to be
-; related to video terminal output.  What follows here are KIM-1-specific
-; initialization and I/O routines from the Aresco version of V3D.  -dhh 
+; Initialization and I/O routines for the Kowalski simulator
+; with I/O at $F000
 ;
 CONINI    LDA #$E0	; init BRK vector as $2CE0
-          STA $17FE
+          STA $FFFE ; Store directly to IRQ/BRK vector
           LDA #$2C
-          STA $17FF
+          STA $FFFF
           CLC
           RTS
-TVOUT     JSR $1EA0	; TTY OUTCH in KIM-1 ROM
+TVOUT     STA $F001     ; Output character to Kowalski simulator
           CLC
           RTS
 KEYIN     INC HASH      ; bump random seed
-          BIT $1740     ; (R)RIOT I/O register A
-          BMI KEYIN
-          LDA $1742     ; (R)RIOT I/O register B
-          AND #$FE
-          STA $1742
-          JSR $1E5A     ; GETCH in KIM-1 ROM
-          PHA
-          LDA $1742     ; the echo defeat
-          AND #$FE
-          ORA #$01
-          STA $1742
-          PLA
-          CLC
-          RTS          ; 
-;
-;  The next bytes do not appear to be used for anything.
-;  Perhaps leftover from Aresco conversion of Prog/Exch
-;  version for KIM-1 (???).
-;
-        .BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
-        .BYTE $53,$01,$51,$51,$11,$53,$EE,$CE,$FE,$EE,$EA
-        .BYTE $EE,$06,$FE
-;          BRK
-;          ???                ;01000011 'C'
-;          ORA ($51),Y
-;          ORA ($11),Y
-;          ???                ;00010111
-;          ORA ($01,X)
-;          ORA ($41),Y
-;          ???                ;01010011 'S'
-;          ORA ($51,X)
-;          EOR ($11),Y
-;          ???                ;01010011 'S'
-;          INC $FECE
-;          INC $EEEA
-;          ASL $FE
-;
 
+          LDA $F004     ; Get Character
+          BEQ KEYIN     ; If no character, try again
+          CLC           ; Indicate success
+          RTS
+
+        ; Jump ahead to keep the following tables at the same memory address.
+        .ORG $34E8
 ;     SPECIAL TERMINATOR CHAR TABLE (see P/E code at $2401)
 ;
 TRMTAB   .BYTE ' '     ; LEVEL 0 (SPACE)
@@ -3879,4 +3840,10 @@ PRGBEG    .BYTE 0	; LINE NUMBER OF 00.00
 
 PBEG      .BYTE EOP     ; START OF PROGRAM TEXT AREA
 VEND      .BYTE EOV     ; END OF VARIABLE LIST
+
+; Vectors for Kowalski simulator
+         .ORG $FFFA
+         .WORD $2000
+         .WORD $2000    ; Start address for FOCAL-65
+         .WORD $2CE0    ; BREAK handler used by FOCAL-65
          .END     
