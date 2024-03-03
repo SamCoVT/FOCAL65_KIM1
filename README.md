@@ -1,36 +1,41 @@
 # FOCAL65_KIM1
 FOCAL-65 for KIM-1 computers based on the source of the Aresco version (V3D) for TIM
 
-Source code typed in from a scanned listing of a 1977 printout and
-verified against a binary version saved by Hans Otten.  The goal is to
-get source code that assembles to a byte-exact version of the
-historical binary.  Hans has also typed in this code to recreate the
-original assembly for both a KIM-1 and TIM version, and you can find
-his sources here: http://retro.hansotten.nl/6502-sbc/focal-65-v3d/
-along with some history.
+This version is the KIM-1 Aresco version, with reconstructed source
+built based on the original Aresco binary from Hans Otten's site, plus
+consultation of the similar 6502 Group/Program Exchange V3D source for
+the TIM monitor (which Hans has reconstructed) to recreate source
+for the Aresco version.
+
+Hans has also typed in this code to recreate the original assembly for
+both a KIM-1 and TIM version, and you can find his sources here:
+http://retro.hansotten.nl/6502-sbc/focal-65-v3d/ along with some
+history.
 
 Hans Otten also has an excellent simulator for the KIM-1 here:
 http://retro.hansotten.nl/6502-sbc/kim-1-manuals-and-software/kim-1-simulator/
 This software should run on the KIM-1 Simulator software but needs
-special FOCAL V3D break handline turned on in the settings.
+special FOCAL V3D break handling turned on in the settings.
 
-This is a separate effort from Hans Otten's work to recreate this code
-from the scanned listing.  This code has been formatted for the
-Kowalski assembler, but should assemble with other assemblers with
-only minor formatting or assembler directive changes.
+This is a separate effort from Hans Otten's work to recreate and
+verify this code from the scanned listing.  This code has been
+formatted for the Kowalski assembler, but should assemble with other
+assemblers with only minor formatting or assembler directive changes.
 
 # Current Status:
 
-The source assembles and is a binary match to the historical
-version provided by Hans Otten with the exception of extra bytes
-at the end of zero page and at the end of the program.
+The source assembles and is a binary match to the historical version
+provided by Hans Otten with the exception of extra bytes at the end of
+zero page and at the end of the program and the KIM-1 specific I/O
+patch (which can be found in the KIM/6502 User Notes on Hans' site:
+http://retro.hansotten.nl/6502-sbc/focal-65-v3d/#articles).
 
 This version appears to work in the KIM1 simulator (lightly tested).
 
 I tried adding the zero page initialization routine from the FOCAL
 6502 User Notes, but FOCAL does not run properly so that has been
 removed in this version.  There appear to be some addresses that are
-hard coded that need to be adjusted above an beyond the zero page
+hard coded that need to be adjusted above and beyond the zero page
 values listed in the FOCAL 6502 User Notes.  The code for this patch
 has been placed in zpinit.asm.
 
