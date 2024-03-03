@@ -172,11 +172,11 @@ FTEN	= $91		; CONSTANT 10.00
 FHALF	= $96		; CONSTANT 2.50
 FONE	= $9B		; CONSTANT 1.00
 T	= $A0		; TEMP (5 bytes)
-
 		; FLAG END OF OUR PAGE ZERO USAGE
 		; FOR ANYONE WHO NEEDS TO KNOW
 
 ;	$A5 = SAVYR  save for Y register (was $7F in v3 - RUBOUT)
+SAVYR   = $A5
 ;	also, end of zero page usage
 ;	TIM I/O package not in the Aresco version of v3d.
 
@@ -1643,7 +1643,8 @@ READCR    LDA CHAR	; GET CHAR BACK
           RTS
 
 READCE    LDA CHAR	; this is also not in original ProgExch code...
-          JSR PRINTC
+          ; JSR PRINTC   ; Changed to no-ops ($EA) for I/O patch
+          .BYTE $EA, $EA, $EA
           CMP #$0D
           BNE RTS1	; ... to here. Next line was label READCE
           LDA #$0A	; FOLLOW CARRIAGE RETS WITH A LINE FEED
@@ -3489,21 +3490,32 @@ CONINI    LDA #$E0	; init BRK vector as $2CE0
           STA $17FF
           CLC
           RTS
-TVOUT     JSR $1EA0	; TTY OUTCH in KIM-1 ROM
+          ; This code has KIM-1 I/O patch from focal user notes applied
+TVOUT     STY SAVYR     ; save "Y"
+          JSR $1EA0     ; TTY OUTCH in KIM-1 ROM
+          LDY SAVYR     ; restore "Y"
           CLC
           RTS
 KEYIN     INC HASH      ; bump random seed
-          BIT $1740     ; (R)RIOT I/O register A
-          BMI KEYIN
-          LDA $1742     ; (R)RIOT I/O register B
-          AND #$FE
+          BIT $1740     ; test input port ((R)RIOT I/O register A)
+          BMI KEYIN     ; loop 'til start bit
+          LDA ECHFLG    ; get echo flag
+          BNE NOECH     ; branch for no echo
+          JSR $1E5A     ; get character with echo (GETCH in KIM-1 ROM)
+          CLC
+          RTS
+NOECH
+          LDA $1742     ; get port status ((R)RIOT I/O register B)
+          AND #$FE      ; turn off bit
           STA $1742
           JSR $1E5A     ; GETCH in KIM-1 ROM
-          PHA
-          LDA $1742     ; the echo defeat
-          AND #$FE
-          ORA #$01
-          STA $1742
+          PHA           ; save character
+          LDA $1742     ; get port status
+          ORA #$01      ; turn on bit
+          STA $1742     
+          ; make echo a rubout
+          LDA #0        ; get a null character
+          JSR $1EA0     ; echo it (OUTCH in KIM-1 ROM)
           PLA
           CLC
           RTS          ; 
@@ -3512,9 +3524,7 @@ KEYIN     INC HASH      ; bump random seed
 ;  Perhaps leftover from Aresco conversion of Prog/Exch
 ;  version for KIM-1 (???).
 ;
-        .BYTE $00,$43,$11,$51,$11,$11,$17,$01,$01,$11,$41
-        .BYTE $53,$01,$51,$51,$11,$53,$EE,$CE,$FE,$EE,$EA
-        .BYTE $EE,$06,$FE
+        .BYTE $53,$EE,$CE,$FE,$EE,$EA,$EE,$06,$FE
 ;          BRK
 ;          ???                ;01000011 'C'
 ;          ORA ($51),Y
