@@ -1,5 +1,5 @@
 # FOCAL65_KIM1
-FOCAL-65 for KIM-1 computers based on the source of the Aresco version (V3D) for TIM
+Aresco FOCAL-65 for KIM-1 computers, based on the source of the Denver 6502 Group/Program Exchange version (V3D) for TIM.
 
 This version is the KIM-1 Aresco version, with reconstructed source
 built based on the original Aresco binary from Hans Otten's site, plus
@@ -7,7 +7,7 @@ consultation of the similar 6502 Group/Program Exchange V3D source for
 the TIM monitor (which Hans has reconstructed) to recreate source
 for the Aresco version.
 
-Hans has also typed in this code to recreate the original assembly for
+Hans has also typed in the code to recreate the original assembly for
 both a KIM-1 and TIM version, and you can find his sources here:
 http://retro.hansotten.nl/6502-sbc/focal-65-v3d/ along with some
 history.
