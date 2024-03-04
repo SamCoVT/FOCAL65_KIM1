@@ -93,13 +93,13 @@ FOCAL-650000.bin - binary dump of zero page from PTP (papertape) file
 
 FOCAL-652000.bin - binary dump of program (starting at $2000) from PTP file
 
-FOCALNEW.bin - binary image (entire 64K memory space) from Kowalski assembler after assembling FOCAL-65-SOURCE_ARESCOV3D_RAW-WORK_V2.asm 
+FOCALNEW.bin - binary image (entire 64K memory space) from Kowalski assembler after assembling FOCAL-65-SOURCE_ARESCOV3D.asm 
 
 Cleaner (no patches) original binary from Hans Otten:
 
-FOCALZP.BIN - binary dump of zero page
+FOCALZP.BIN - binary dump of zero page from Hans Otten
 
-FOCALM.BIN - binary dump of program (starting at $2000)
+FOCALM.BIN - binary dump of program (starting at $2000) from Hans Otten
 
 ## Zero page compare
 dhex FOCALNEW.bin FOCALZP.bin
